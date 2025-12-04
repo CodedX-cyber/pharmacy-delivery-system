@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/pharmacy-delivery-system/admin/static/css/main.e1e3caad.css",
+    "main.js": "/pharmacy-delivery-system/admin/static/js/main.c96992c3.js",
+    "static/js/453.a6bd7fa6.chunk.js": "/pharmacy-delivery-system/admin/static/js/453.a6bd7fa6.chunk.js",
+    "index.html": "/pharmacy-delivery-system/admin/index.html",
+    "main.e1e3caad.css.map": "/pharmacy-delivery-system/admin/static/css/main.e1e3caad.css.map",
+    "main.c96992c3.js.map": "/pharmacy-delivery-system/admin/static/js/main.c96992c3.js.map",
+    "453.a6bd7fa6.chunk.js.map": "/pharmacy-delivery-system/admin/static/js/453.a6bd7fa6.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e1e3caad.css",
+    "static/js/main.c96992c3.js"
+  ]
+}
