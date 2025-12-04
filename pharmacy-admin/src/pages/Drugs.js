@@ -25,9 +25,10 @@ const Drugs = () => {
   const fetchDrugs = async () => {
     try {
       const response = await drugsAPI.getAll();
-      setDrugs(response.data.drugs);
+      setDrugs(response.data || []);
     } catch (error) {
       console.error('Error fetching drugs:', error);
+      setDrugs([]);
     } finally {
       setLoading(false);
     }
@@ -102,9 +103,10 @@ const Drugs = () => {
     }));
   };
 
-  const filteredDrugs = drugs.filter(drug =>
-    drug.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    drug.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredDrugs = (drugs || []).filter(drug =>
+    drug && drug.name && drug.description &&
+    (drug.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+     drug.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   if (loading) {

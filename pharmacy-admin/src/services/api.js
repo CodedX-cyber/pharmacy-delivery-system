@@ -26,8 +26,33 @@ function getMockData(url) {
   }
   if (url.includes('/drugs')) {
     return [
-      { id: 1, name: 'Paracetamol', price: 5.99, stock: 100, description: 'Pain reliever' },
-      { id: 2, name: 'Ibuprofen', price: 7.99, stock: 50, description: 'Anti-inflammatory' }
+      { 
+        id: 1, 
+        name: 'Paracetamol', 
+        price: 5.99, 
+        stock_quantity: 100, 
+        description: 'Pain reliever medication',
+        requires_prescription: false,
+        image_url: 'https://via.placeholder.com/50x50?text=PAR'
+      },
+      { 
+        id: 2, 
+        name: 'Ibuprofen', 
+        price: 7.99, 
+        stock_quantity: 50, 
+        description: 'Anti-inflammatory medication',
+        requires_prescription: false,
+        image_url: 'https://via.placeholder.com/50x50?text=IBU'
+      },
+      { 
+        id: 3, 
+        name: 'Amoxicillin', 
+        price: 12.99, 
+        stock_quantity: 25, 
+        description: 'Antibiotic medication',
+        requires_prescription: true,
+        image_url: 'https://via.placeholder.com/50x50?text=AMX'
+      }
     ];
   }
   return {};
