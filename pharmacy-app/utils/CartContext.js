@@ -1,0 +1,116 @@
+import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import { storage } from '../services/storage';
+
+const CartContext = createContext();
+
+const cartReducer = (state, action) => {
+  switch (action.type) {
+    case 'SET_CART':
+      return action.payload;
+    case 'ADD_TO_CART':
+      const existingItem = state.find(item => item.id === action.payload.id);
+      if (existingItem) {
+        return state.map(item =>
+          item.id === action.payload.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      return [...state, { ...action.payload, quantity: 1 }];
+    case 'REMOVE_FROM_CART':
+      return state.filter(item => item.id !== action.payload);
+    case 'UPDATE_QUANTITY':
+      return state.map(item =>
+        item.id === action.payload.id
+          ? { ...item, quantity: action.payload.quantity }
+          : item
+      );
+    case 'CLEAR_CART':
+      return [];
+    default:
+      return state;
+  }
+};
+
+export const CartProvider = ({ children }) => {
+  const [cart, dispatch] = useReducer(cartReducer, []);
+
+  // Load cart from storage on app start
+  useEffect(() => {
+    loadCart();
+  }, []);
+
+  const loadCart = async () => {
+    try {
+      const cartItems = await storage.getCartItems();
+      dispatch({ type: 'SET_CART', payload: cartItems });
+    } catch (error) {
+      console.error('Error loading cart:', error);
+    }
+  };
+
+  const saveCart = async (cartItems) => {
+    try {
+      await storage.setCartItems(cartItems);
+    } catch (error) {
+      console.error('Error saving cart:', error);
+    }
+  };
+
+  // Save cart to storage whenever it changes
+  useEffect(() => {
+    saveCart(cart);
+  }, [cart]);
+
+  const addToCart = (drug) => {
+    dispatch({ type: 'ADD_TO_CART', payload: drug });
+  };
+
+  const removeFromCart = (drugId) => {
+    dispatch({ type: 'REMOVE_FROM_CART', payload: drugId });
+  };
+
+  const updateQuantity = (drugId, quantity) => {
+    if (quantity <= 0) {
+      removeFromCart(drugId);
+    } else {
+      dispatch({ type: 'UPDATE_QUANTITY', payload: { id: drugId, quantity } });
+    }
+  };
+
+  const clearCart = () => {
+    dispatch({ type: 'CLEAR_CART' });
+  };
+
+  const getCartTotal = () => {
+    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+  };
+
+  const getCartItemCount = () => {
+    return cart.reduce((count, item) => count + item.quantity, 0);
+  };
+
+  const value = {
+    cart,
+    addToCart,
+    removeFromCart,
+    updateQuantity,
+    clearCart,
+    getCartTotal,
+    getCartItemCount,
+  };
+
+  return (
+    <CartContext.Provider value={value}>
+      {children}
+    </CartContext.Provider>
+  );
+};
+
+export const useCart = () => {
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error('useCart must be used within a CartProvider');
+  }
+  return context;
+};
