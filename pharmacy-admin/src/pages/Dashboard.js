@@ -19,12 +19,12 @@ const Dashboard = () => {
     try {
       // Get all orders
       const response = await ordersAPI.getAll();
-      const orders = response.data.orders;
+      const orders = response.data || [];
       
       // Calculate today's stats
       const today = new Date().toDateString();
       const todayOrders = orders.filter(order => 
-        new Date(order.created_at).toDateString() === today
+        order && new Date(order.created_at).toDateString() === today
       );
       
       const todayRevenue = todayOrders.reduce((sum, order) => 

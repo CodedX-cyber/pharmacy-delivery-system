@@ -16,9 +16,10 @@ const Orders = () => {
   const fetchOrders = async () => {
     try {
       const response = await ordersAPI.getAll(statusFilter !== 'all' ? statusFilter : null);
-      setOrders(response.data.orders);
+      setOrders(response.data || []);
     } catch (error) {
       console.error('Error fetching orders:', error);
+      setOrders([]);
     } finally {
       setLoading(false);
     }

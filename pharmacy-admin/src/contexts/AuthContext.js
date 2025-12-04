@@ -55,7 +55,15 @@ export const AuthProvider = ({ children }) => {
       const adminData = localStorage.getItem('adminData');
       
       if (token && adminData) {
-        dispatch({ type: 'SET_ADMIN', payload: JSON.parse(adminData) });
+        try {
+          const parsedData = JSON.parse(adminData);
+          dispatch({ type: 'SET_ADMIN', payload: parsedData });
+        } catch (parseError) {
+          console.error('Error parsing admin data:', parseError);
+          localStorage.removeItem('adminToken');
+          localStorage.removeItem('adminData');
+          dispatch({ type: 'SET_LOADING', payload: false });
+        }
       } else {
         dispatch({ type: 'SET_LOADING', payload: false });
       }
