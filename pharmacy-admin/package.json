@@ -2,8 +2,7 @@
   "name": "pharmacy-admin",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://codedx-cyber.github.io/pharmacy-delivery-system/admin",
-  "dependencies": {
+    "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.5",
