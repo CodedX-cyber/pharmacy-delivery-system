@@ -24,7 +24,7 @@ function AppContent() {
   }
 
   return (
-    <Router>
+    <Router basename="/pharmacy-delivery-system">
       <Routes>
         <Route 
           path="/login" 
