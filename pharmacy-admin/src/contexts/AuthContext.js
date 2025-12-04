@@ -46,6 +46,19 @@ export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   useEffect(() => {
+    // Clear any corrupted localStorage data on app load
+    try {
+      const adminData = localStorage.getItem('adminData');
+      if (adminData && (adminData === 'undefined' || adminData === 'null')) {
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminData');
+      }
+    } catch (error) {
+      // Clear localStorage if there's any error
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminData');
+    }
+    
     checkAuthStatus();
   }, []);
 
