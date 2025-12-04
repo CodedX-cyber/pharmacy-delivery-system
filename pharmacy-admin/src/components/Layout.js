@@ -8,7 +8,8 @@ const Layout = ({ children }) => {
   const { logout, admin } = useAuth();
 
   const isActivePath = (path) => {
-    return location.pathname === path;
+    const currentPath = location.pathname.replace('/pharmacy-delivery-system', '');
+    return currentPath === path || currentPath === `${path}/`;
   };
 
   const handleLogout = () => {
@@ -16,7 +17,8 @@ const Layout = ({ children }) => {
   };
 
   // Don't show layout on login page
-  if (location.pathname === '/login') {
+  const currentPath = location.pathname.replace('/pharmacy-delivery-system', '');
+  if (currentPath === '/login') {
     return children;
   }
 
