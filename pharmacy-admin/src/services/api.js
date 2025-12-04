@@ -1,42 +1,39 @@
-import axios from 'axios';
+// Mock API for demo purposes
+const mockApi = {
+  get: (url) => Promise.resolve({ data: getMockData(url) }),
+  post: (url, data) => Promise.resolve({ data: { success: true, ...data } }),
+  put: (url, data) => Promise.resolve({ data: { success: true, ...data } }),
+  delete: (url) => Promise.resolve({ data: { success: true } })
+};
 
-const API_BASE_URL = 'http://localhost:3000/api';
-
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Request interceptor to add auth token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('adminToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+function getMockData(url) {
+  if (url.includes('/auth/login')) {
+    return { token: 'mock-token', user: { email: 'admin@pharmacy.com' } };
   }
-);
-
-// Response interceptor to handle errors
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem('adminToken');
-      localStorage.removeItem('adminData');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
+  if (url.includes('/dashboard')) {
+    return { 
+      totalOrders: 156, 
+      totalRevenue: 45678, 
+      pendingOrders: 23,
+      todayOrders: 12
+    };
   }
-);
+  if (url.includes('/orders')) {
+    return [
+      { id: 1, customerName: 'John Doe', total: 156.78, status: 'pending' },
+      { id: 2, customerName: 'Jane Smith', total: 89.45, status: 'delivered' }
+    ];
+  }
+  if (url.includes('/drugs')) {
+    return [
+      { id: 1, name: 'Paracetamol', price: 5.99, stock: 100, description: 'Pain reliever' },
+      { id: 2, name: 'Ibuprofen', price: 7.99, stock: 50, description: 'Anti-inflammatory' }
+    ];
+  }
+  return {};
+}
+
+const api = mockApi;
 
 export const authAPI = {
   login: (credentials) => api.post('/auth/admin/login', credentials),
